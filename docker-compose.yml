@@ -1,0 +1,16 @@
+services:
+  bitly:
+    build: .
+    container_name: bitly
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # Адрес, по которому сервис доступен другим (для коротких ссылок).
+      # Оставьте пустым, чтобы брать адрес из запроса.
+      BASE_URL: ""
+      # Задайте ключ, чтобы только вы могли создавать/удалять ссылки
+      API_KEY: ""
+      CODE_LENGTH: "6"
+    volumes:
+      - ./data:/data

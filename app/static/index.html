@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Сокращатель ссылок</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main>
+    <h1>🔗 Сокращатель ссылок</h1>
+
+    <form id="form" class="card">
+      <input id="url" type="text" placeholder="Вставьте длинную ссылку…" required autofocus>
+      <div class="row">
+        <input id="alias" type="text" placeholder="Свой алиас (необязательно)">
+        <button type="submit">Сократить</button>
+      </div>
+      <div id="key-row" class="row hidden">
+        <input id="api-key" type="password" placeholder="API-ключ">
+      </div>
+      <p id="error" class="error hidden"></p>
+    </form>
+
+    <div id="result" class="card result hidden">
+      <a id="short" href="#" target="_blank" rel="noopener"></a>
+      <button id="copy" type="button" class="secondary">Копировать</button>
+    </div>
+
+    <section class="card">
+      <div class="row between">
+        <h2>Мои ссылки</h2>
+        <button id="refresh" type="button" class="secondary">Обновить</button>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Короткая</th><th>Исходная</th><th>Переходы</th><th></th></tr>
+        </thead>
+        <tbody id="links"></tbody>
+      </table>
+      <p id="empty" class="muted hidden">Пока нет ни одной ссылки.</p>
+    </section>
+
+    <footer class="muted">API-документация: <a href="/docs">/docs</a></footer>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>

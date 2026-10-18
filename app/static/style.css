@@ -1,0 +1,60 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #f3f4f8;
+  color: #1f2330;
+}
+main { max-width: 860px; margin: 0 auto; padding: 32px 16px; }
+h1 { margin: 0 0 24px; font-size: 28px; }
+h2 { margin: 0; font-size: 18px; }
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .08);
+}
+.row { display: flex; gap: 10px; margin-top: 10px; }
+.row.between { justify-content: space-between; align-items: center; margin-top: 0; margin-bottom: 12px; }
+input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 16px;
+  border: 1px solid #d5d8e1;
+  border-radius: 8px;
+  outline: none;
+}
+input:focus { border-color: #4f6af5; }
+button {
+  padding: 12px 20px;
+  font-size: 15px;
+  border: 0;
+  border-radius: 8px;
+  background: #4f6af5;
+  color: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+}
+button:hover { background: #3d56d8; }
+button.secondary { background: #eceefa; color: #3d56d8; padding: 8px 14px; }
+button.secondary:hover { background: #dde1f7; }
+button.danger { background: transparent; color: #c0392b; padding: 4px 8px; }
+button.danger:hover { background: #fdecea; }
+.result { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.result a { font-size: 20px; font-weight: 600; color: #3d56d8; word-break: break-all; }
+.error { color: #c0392b; margin: 10px 0 0; }
+.muted { color: #8a8fa3; }
+.hidden { display: none !important; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; table-layout: fixed; }
+th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid #eef0f5; }
+th { color: #8a8fa3; font-weight: 500; }
+th:nth-child(1) { width: 30%; } th:nth-child(3) { width: 90px; } th:nth-child(4) { width: 50px; }
+td { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+td a { color: #3d56d8; text-decoration: none; }
+footer { text-align: center; font-size: 14px; }
+footer a { color: #4f6af5; }
+@media (max-width: 600px) {
+  .row { flex-direction: column; }
+  th:nth-child(2), td:nth-child(2) { display: none; }
+}
