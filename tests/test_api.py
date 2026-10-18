@@ -20,7 +20,7 @@ def secured(tmp_path):
 def test_index(client):
     r = client.get("/")
     assert r.status_code == 200
-    assert "Сокращатель" in r.text
+    assert "сокращатель ссылок" in r.text
 
 
 def test_create_and_redirect(client):
@@ -89,3 +89,52 @@ def test_api_key(secured):
     # Переход по ссылке доступен без ключа
     assert secured.get(f"/{r.json()['code']}", follow_redirects=False).status_code == 302
     assert secured.get("/health").json()["auth_required"] is True
+
+
+def test_stats(client):
+    assert client.get("/api/stats").json() == {"links": 0, "clicks": 0}
+    code = client.post("/api/links", json={"url": "https://e.com"}).json()["code"]
+    client.get(f"/{code}", follow_redirects=False)
+    client.get(f"/{code}", follow_redirects=False)
+    client.post("/api/links", json={"url": "https://e.org"})
+    assert client.get("/api/stats").json() == {"links": 2, "clicks": 2}
+
+
+def test_wsgi_entrypoint(tmp_path, monkeypatch):
+    """Проверяем, что приложение работает через WSGI (как на PythonAnywhere)."""
+    import importlib
+    import sys
+    from wsgiref.util import setup_testing_defaults
+
+    monkeypatch.setenv("DB_PATH", str(tmp_path / "wsgi.db"))
+    for mod in ("wsgi", "app.main", "app.config"):
+        sys.modules.pop(mod, None)
+    wsgi = importlib.import_module("wsgi")
+
+    def call(method, path, body=b""):
+        import io
+        environ = {}
+        setup_testing_defaults(environ)
+        environ.update({
+            "REQUEST_METHOD": method, "PATH_INFO": path,
+            "CONTENT_TYPE": "application/json", "CONTENT_LENGTH": str(len(body)),
+            "wsgi.input": io.BytesIO(body),
+        })
+        captured = {}
+
+        def start_response(status, headers, exc_info=None):
+            captured["status"], captured["headers"] = status, dict(headers)
+
+        data = b"".join(wsgi.application(environ, start_response))
+        return captured["status"], captured["headers"], data
+
+    status, _, data = call("POST", "/api/links", b'{"url": "https://example.com", "alias": "wsgi-test"}')
+    assert status.startswith("201"), data
+    status, headers, _ = call("GET", "/wsgi-test")
+    assert status.startswith("302")
+    assert headers["location"] == "https://example.com"
+    status, _, data = call("GET", "/")
+    assert status.startswith("200") and "bitly".encode() in data
+
+    for mod in ("wsgi", "app.main", "app.config"):
+        sys.modules.pop(mod, None)

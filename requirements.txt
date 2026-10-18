@@ -1,2 +1,4 @@
 fastapi>=0.110
 uvicorn[standard]>=0.29
+# WSGI-адаптер для PythonAnywhere и других WSGI-хостингов
+a2wsgi>=1.10

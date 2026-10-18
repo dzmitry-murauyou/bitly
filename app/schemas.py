@@ -10,7 +10,7 @@ ALIAS_RE = re.compile(r"^[A-Za-z0-9_-]{3,32}$")
 # Домен (в т.ч. IDN/кириллица), IPv4 или IPv6
 HOST_RE = re.compile(r"^(?:[\w-]+(?:\.[\w-]+)*\.?|\[?[0-9a-f:.]+\]?)$", re.IGNORECASE)
 # Пути, которые заняты самим сервисом и не могут быть алиасами
-RESERVED = {"api", "static", "docs", "redoc", "openapi.json", "health", "favicon.ico"}
+RESERVED = {"api", "static", "docs", "redoc", "openapi.json", "health", "favicon.ico", "robots.txt"}
 MAX_URL_LENGTH = 2048
 
 

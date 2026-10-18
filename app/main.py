@@ -86,6 +86,10 @@ def create_app(settings: Settings = default_settings) -> FastAPI:
     ) -> list[LinkOut]:
         return [to_out(r, request) for r in db.list(limit, offset)]
 
+    @app.get("/api/stats", tags=["links"], dependencies=[Depends(require_key)])
+    def stats() -> dict:
+        return db.stats()
+
     @app.get("/api/links/{code}", response_model=LinkOut, tags=["links"])
     def get_link(code: str, request: Request) -> LinkOut:
         row = db.get(code)

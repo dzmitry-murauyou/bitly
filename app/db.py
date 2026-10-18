@@ -31,8 +31,8 @@ class Database:
         self.path = path
         directory = os.path.dirname(os.path.abspath(path))
         os.makedirs(directory, exist_ok=True)
+        # WAL не используем: он не работает на сетевых ФС (например, на PythonAnywhere)
         with self.connect() as conn:
-            conn.execute("PRAGMA journal_mode=WAL")
             conn.executescript(SCHEMA)
 
     @contextmanager
@@ -106,6 +106,13 @@ class Database:
             return conn.execute(
                 "SELECT * FROM links ORDER BY id DESC LIMIT ? OFFSET ?", (limit, offset)
             ).fetchall()
+
+    def stats(self) -> dict:
+        with self.connect() as conn:
+            row = conn.execute(
+                "SELECT COUNT(*) AS links, COALESCE(SUM(clicks), 0) AS clicks FROM links"
+            ).fetchone()
+            return {"links": row["links"], "clicks": row["clicks"]}
 
     def delete(self, code: str) -> bool:
         with self.connect() as conn:
